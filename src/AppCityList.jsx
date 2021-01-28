@@ -38,7 +38,8 @@ class City extends React.Component {
 
         this.state = {
             weather_is_loading : true,
-            weather : null
+            weather : null,
+            city_not_found : false
         }
 
         this.get_weather_by_city = this.get_weather_by_city.bind( this );
@@ -57,6 +58,8 @@ class City extends React.Component {
                         weather_is_loading : false
                     });
 
+                    if ( data.cod !== 200 ) throw data.message;
+
                     this.setState({
                         weather : {
                             ico : `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
@@ -68,6 +71,15 @@ class City extends React.Component {
                     })
                 }
             )
+            .catch(
+                (e) => {
+                    this.setState(
+                        {
+                            city_not_found : true
+                        }
+                    )
+                }
+            );
     }
 
     componentDidMount() {
@@ -95,6 +107,13 @@ class City extends React.Component {
                 }
                 { this.state.weather_is_loading &&
                     <p align="center">Loading...</p>
+                }
+                { this.state.city_not_found &&
+                    <p align="center" style={{ "color" : "red", fontSize: "16pt" }}>
+                        <span>
+                            City Not Found...
+                        </span>
+                    </p>
                 }
             </Card>
         )

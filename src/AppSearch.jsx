@@ -30,12 +30,22 @@ class AppSearch extends React.Component {
                     search_value : '',
                     search_result_is_visible : false
                 },
-                this.props.add_city(
-                    {
-                        name : this.state.city,
-                        weather : null
-                    }
-                )
+                () => {
+                    this.props.add_city(
+                        {
+                            name : this.state.city,
+                            weather : null
+                        }
+                    );
+                    localStorage.setItem(
+                        'cities',
+                        localStorage.getItem('cities')
+                            ?
+                            localStorage.getItem('cities') + ';' + this.state.city
+                            :
+                            this.state.city
+                    );
+                }
             );
     }
 
