@@ -3,6 +3,10 @@ import { transliterate as tr } from "transliteration";
 
 import {TopBar, ActionList } from '@shopify/polaris';
 
+import { connect } from 'react-redux';
+
+import { add_city_action } from "./redux/actions";
+
 class AppSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -20,10 +24,19 @@ class AppSearch extends React.Component {
     }
 
     accept_city() {
-        this.setState({
-            search_value : '',
-            search_result_is_visible : false
-        });
+        if ( !this.state.error )
+            this.setState(
+                {
+                    search_value : '',
+                    search_result_is_visible : false
+                },
+                this.props.add_city(
+                    {
+                        name : this.state.city,
+                        weather : null
+                    }
+                )
+            );
     }
 
     handleSearchResultsDismiss() {
@@ -106,4 +119,17 @@ class AppSearch extends React.Component {
     }
 }
 
-export default AppSearch;
+const mapDispatchToProps = dispatch => {
+    return {
+        add_city : city => {
+            dispatch( add_city_action( city ) )
+        }
+    }
+}
+
+const AppReduxSearch = connect(
+    null,
+    mapDispatchToProps
+)(AppSearch);
+
+export default AppReduxSearch;

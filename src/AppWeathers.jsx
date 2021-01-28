@@ -20,7 +20,7 @@ class AppWeathers extends React.Component {
 
     get_weather() {
         fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${this.state.default_city}&appid=da421e8a1dd13d27c7467803e6c8e91d&units=metric`,
+            `https://api.openweathermap.org/data/2.5/weather?q=${this.state.default_city}&appid=966b0b3a111f1043d1f09e84f6549709&units=metric`,
             {
                 method : 'GET'
             }
@@ -56,9 +56,18 @@ class AppWeathers extends React.Component {
                     this.setState({
                         geo_is_loading : false
                     });
+
                     this.setState({default_city : data.city}, this.get_weather );
+                    this.tick = setInterval(
+                        () => this.setState({default_city : data.city}, this.get_weather ),
+                        5000
+                    );
                 }
             );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.tick);
     }
 
     render() {
